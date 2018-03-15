@@ -26,16 +26,36 @@ window.createMatrix = function(n) {
 window.findNRooksSolution = function(n) {
   var matrix = new Board({n:n});
   
-  var permutate = function(row, col, board) {
-    // board.togglePiece(row, col);
+  // if (n === 2) {
+  //   debugger;
+  // }
   
+  var permutate = function(rooks) {
+    var rows = matrix.rows();
+    if (rooks === 0) {
+      var resultArr = [];
+      for (var key in matrix.attributes) {
+        resultArr.push(matrix.attributes[key]);
+      }
+      resultArr.pop();
+      return resultArr;
+    }
+    // debugger;
+    for (var row = 0; row < n; row++) {
+      for (var col = 0; col < n; col++) {
+        if(rows[row][col] !== 1) {
+          matrix.togglePiece(row, col);
+          if (!matrix.hasAnyRooksConflicts()) {
+            return permutate(rooks - 1);
+          }
+          matrix.togglePiece(row, col);
+        } 
+      }
+    }
   };
   
+  solution = permutate(n);
   
-  
-  
-  
-  solution = matrix;
   
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -43,17 +63,31 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0; //fixme
   
-  var factorial = function(num) {
-    if (num === 0) {
-      return 1;
+  var matrix = new Board({n:n});
+  
+  var permutate = function(row) {
+    var rows = matrix.rows();
+    if (row === n) {
+      solutionCount++;
+      return;
     }
-    return num * factorial(num - 1);
+    for (var col = 0; col < n; col++) {
+      if(rows[row][col] !== 1) {
+        matrix.togglePiece(row, col);
+        if (!matrix.hasAnyRooksConflicts()) {
+          permutate(row + 1);
+        }
+        matrix.togglePiece(row, col);
+      } 
+    }
   };
   
+  permutate(0);
+  
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return factorial(n);
+  return solutionCount;
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
