@@ -11,27 +11,27 @@
 // take a look at solversSpec.js to see what the tests are expecting
 
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
+// return a board (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  var matrix = new Board({n:n});
+  var board = new Board({n:n});
   
   var permutate = function(row) {
-    var rows = matrix.rows();
+    var rows = board.rows();
     if (row === n) {
       var resultArr = [];
-      for (var key in matrix.attributes) {
-        resultArr.push(matrix.attributes[key]);
+      for (var key in board.attributes) {
+        resultArr.push(board.attributes[key]);
       }
       resultArr.pop();
       return resultArr;
     }
     for (var col = 0; col < n; col++) {
-      matrix.togglePiece(row, col);
-      if (!matrix.hasAnyRooksConflicts()) {
+      board.togglePiece(row, col);
+      if (!board.hasAnyRooksConflicts()) {
         return permutate(row + 1);
       }
-      matrix.togglePiece(row, col);
+      board.togglePiece(row, col);
     }
   };
   
@@ -46,20 +46,19 @@ window.findNRooksSolution = function(n) {
 window.countNRooksSolutions = function(n) {
   var solutionCount = 0; //fixme
   
-  var matrix = new Board({n:n});
+  var board = new Board({n:n});
   
   var permutate = function(row) {
-    var rows = matrix.rows();
     if (row === n) {
       solutionCount++;
       return;
     }
     for (var col = 0; col < n; col++) {
-      matrix.togglePiece(row, col);
-      if (!matrix.hasAnyRooksConflicts()) {
+      board.togglePiece(row, col);
+      if (!board.hasAnyRooksConflicts()) {
         permutate(row + 1);
       }
-      matrix.togglePiece(row, col);
+      board.togglePiece(row, col);
     }
   };
   
@@ -69,25 +68,25 @@ window.countNRooksSolutions = function(n) {
   return solutionCount;
 };
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+// return a board (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var matrix = new Board({n:n});
+  var board = new Board({n:n});
   var permutate = function(row) {
-    var rows = matrix.rows();
+    var rows = board.rows();
     if (row === n) {
       var resultArr = [];
-      for (var key in matrix.attributes) {
-        resultArr.push(matrix.attributes[key]);
+      for (var key in board.attributes) {
+        resultArr.push(board.attributes[key]);
       }
       resultArr.pop();
       return resultArr;
     }
     for (var col = 0; col < n; col++) {
-      matrix.togglePiece(row, col);
-      if (!matrix.hasAnyQueensConflicts()) {
+      board.togglePiece(row, col);
+      if (!board.hasAnyQueensConflicts()) {
         return permutate(row + 1);
       }
-      matrix.togglePiece(row, col);
+      board.togglePiece(row, col);
     }
   };
   
@@ -100,21 +99,24 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
+  if (n === 2 || n === 3) {
+    return 0;
+  }
   var solutionCount = 0; //fixme
-  var matrix = new Board({n:n});
+  
+  var board = new Board({n:n});
   
   var permutate = function(row) {
-    var rows = matrix.rows();
     if (row === n) {
       solutionCount++;
       return;
     }
     for (var col = 0; col < n; col++) {
-      matrix.togglePiece(row, col);
-      if (!matrix.hasAnyQueensConflicts()) {
+      board.togglePiece(row, col);
+      if (!board.hasAnyQueensConflicts()) {
         permutate(row + 1);
       }
-      matrix.togglePiece(row, col);
+      board.togglePiece(row, col);
     }
   };
   
